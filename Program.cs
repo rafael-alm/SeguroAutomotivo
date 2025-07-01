@@ -1,0 +1,59 @@
+using SeguroAutomotivo.Bootstrap;
+using FastEndpoints;
+using FastEndpoints.Swagger;
+using SeguroAutomotivo.Common.Settings;
+using System.Reflection;
+using SeguroAutomotivo.Domian.PropostasPessoaFisica.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args);
+var assemblyName = Assembly.GetExecutingAssembly().GetName();
+var serviceName = assemblyName.Name;
+var serviceVersion = Environment.GetEnvironmentVariable("DD_VERSION") ??
+                     Assembly.GetExecutingAssembly().GetName().Version?.ToString();
+
+
+builder
+.Configuration
+.SetBasePath(Directory.GetCurrentDirectory())
+.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+.AddUserSecrets<Program>()
+.AddEnvironmentVariables();
+
+builder.Services
+    .AddCors()
+    .AddFastEndpoints()
+    .SwaggerDocument()
+    .AddHttpContextAccessor()
+    .AddOptions()
+    .AddDependencyInjection(builder.Configuration)
+    .Configure<ServicesSettings>(builder.Configuration.GetSection("ServicesSettings"));
+
+var app = builder.Build();
+var basePath = builder.Configuration["BasePath"];
+app
+    .UseCors(b => b.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod())
+    .UseDefaultExceptionHandler()
+    .UseFastEndpoints(config =>
+    {
+        if (!string.IsNullOrWhiteSpace(basePath)) config.Endpoints.RoutePrefix = basePath;
+    })
+    .UseSwaggerGen(config =>
+    {
+        if (!string.IsNullOrWhiteSpace(basePath)) config.Path = $"/{basePath}/{config.Path}";
+    },
+        settings =>
+        {
+            if (!string.IsNullOrWhiteSpace(basePath))
+            {
+                settings.Path = $"/{basePath}/swagger";
+                settings.DocumentPath = $"/{basePath}/{settings.DocumentPath}";
+            }
+        });
+using var scope = app.Services.CreateScope();
+await scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.MigrateAsync();
+await app.RunAsync();
+
+return 0;
+
+
