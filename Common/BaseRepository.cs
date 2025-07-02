@@ -1,6 +1,6 @@
-﻿using SeguroAutomotivo.Domian.PropostasPessoaFisica.Infrastructure.Persistence;
+﻿using AutoInsurance.Domian.AutoInsurance.Infrastructure.Persistence;
 
-namespace SeguroAutomotivo.Common
+namespace AutoInsurance.Common
 {
     internal abstract class BaseRepository<TAggragate>
         where TAggragate : IAggregate

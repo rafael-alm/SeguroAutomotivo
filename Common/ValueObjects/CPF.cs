@@ -1,7 +1,7 @@
-using SeguroAutomotivo.Crosscutting;
+using AutoInsurance.Crosscutting;
 using System.Text.RegularExpressions;
 
-namespace SeguroAutomotivo.Common.ValueObjects;
+namespace AutoInsurance.Common.ValueObjects;
 
 public readonly struct CPF
 {

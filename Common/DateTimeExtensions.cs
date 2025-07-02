@@ -1,4 +1,4 @@
-namespace SeguroAutomotivo.Common;
+namespace AutoInsurance.Common;
 
 internal static class DateTimeExtensions
 {

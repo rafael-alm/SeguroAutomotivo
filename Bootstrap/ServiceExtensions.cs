@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoInsurance.Domian.AutoInsurance.AturalPersonProposals;
+using AutoInsurance.Domian.AutoInsurance.AturalPersonProposals.Cadastrar;
+using AutoInsurance.Domian.Orchestration.PolicyIssuance.Steps;
+using AutoInsurance.Domian.AutoInsurance.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using SeguroAutomotivo.Domian.PropostasPessoaFisica.Infrastructure.Persistence;
-using SeguroAutomotivo.Domian.SeguroAutomotivo.PropostasPessoaFisica;
-using SeguroAutomotivo.Domian.SeguroAutomotivo.PropostasPessoaFisica.Cadastrar;
+using WorkflowCore.Interface;
 
-namespace SeguroAutomotivo.Bootstrap
+namespace AutoInsurance.Bootstrap
 {
     internal static class ServiceExtensions
     {
@@ -63,10 +65,17 @@ namespace SeguroAutomotivo.Bootstrap
 
             services.AddScoped<UnitOfWork>();
 
-            services.AddScoped<CadastrarPropostasPessoaFisicaHandler>();
-            services.AddScoped<SimularPropostasPessoaFisicaHandler>();
-            services.AddScoped<PropostaPessoaFisicaRepository>();
+            services.AddScoped<CreateNaturalPersonProposalHandler>();
+            services.AddScoped<SimulateNaturalPersonProposalsHandler>();
+            services.AddScoped<NaturalPersonPolicyRepository>();
+            services.AddScoped<CreateNaturalPersonPolicyHandler>();
+            services.AddScoped<NaturalPersonProposalRepository>();
+            services.AddScoped<IssueNFSStep>();
+            services.AddScoped<IssuePolicyCompensationStep>();
+            services.AddScoped<IssuePolicyStep>();
+            services.AddScoped<SendPolicyEmail>();
             
+
             return services;
         }
     }

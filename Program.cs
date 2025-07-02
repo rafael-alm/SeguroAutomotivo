@@ -1,10 +1,14 @@
-using SeguroAutomotivo.Bootstrap;
+using AutoInsurance.Bootstrap;
+using AutoInsurance.Common.Settings;
+using AutoInsurance.Domian.AutoInsurance.Infrastructure.Persistence;
+using AutoInsurance.Domian.Orchestration.PolicyIssuance;
 using FastEndpoints;
 using FastEndpoints.Swagger;
-using SeguroAutomotivo.Common.Settings;
-using System.Reflection;
-using SeguroAutomotivo.Domian.PropostasPessoaFisica.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using System.Reflection;
+using WorkflowCore.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 var assemblyName = Assembly.GetExecutingAssembly().GetName();
@@ -27,7 +31,7 @@ builder.Services
     .AddHttpContextAccessor()
     .AddOptions()
     .AddDependencyInjection(builder.Configuration)
-    .Configure<ServicesSettings>(builder.Configuration.GetSection("ServicesSettings"));
+    .AddWorkflow(/*x => x.UsePostgreSQL(builder.Configuration.GetConnectionString("DefaultConnection"), true, true)*/);
 
 var app = builder.Build();
 var basePath = builder.Configuration["BasePath"];
@@ -52,6 +56,10 @@ app
         });
 using var scope = app.Services.CreateScope();
 await scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.MigrateAsync();
+
+app.Services.GetService<IWorkflowHost>().RegisterWorkflow<PolicyIssuanceWorkflowDefinition, PolicyIssuanceWorkflowData>();
+app.Services.GetService<IWorkflowHost>().Start();
+
 await app.RunAsync();
 
 return 0;

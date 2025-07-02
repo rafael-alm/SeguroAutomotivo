@@ -1,4 +1,4 @@
-﻿namespace SeguroAutomotivo.Common;
+﻿namespace AutoInsurance.Common;
 
 public record struct ErrorMessage(string Code, string Message);
 

@@ -1,4 +1,4 @@
-﻿namespace SeguroAutomotivo.Common.Settings;
+﻿namespace AutoInsurance.Common.Settings;
 
 public record ServicesSettings
 {

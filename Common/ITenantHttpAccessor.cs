@@ -1,4 +1,4 @@
-namespace SeguroAutomotivo.Common;
+namespace AutoInsurance.Common;
 
 public interface ITenantHttpAccessor
 {

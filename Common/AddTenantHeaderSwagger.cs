@@ -3,7 +3,7 @@ using NSwag;
 using NSwag.Generation.Processors;
 using NSwag.Generation.Processors.Contexts;
 
-namespace SeguroAutomotivo.Common;
+namespace AutoInsurance.Common;
 
 public sealed class AddTenantHeaderSwagger : IOperationProcessor
 {

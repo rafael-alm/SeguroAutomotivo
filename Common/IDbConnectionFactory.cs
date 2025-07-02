@@ -1,6 +1,6 @@
 ﻿using System.Data.Common;
 
-namespace SeguroAutomotivo.Common;
+namespace AutoInsurance.Common;
 
 public interface IDbConnectionFactory
 {
